@@ -1,0 +1,33 @@
+---
+- hosts: all
+  sudo: true
+  tasks: 
+  - name: Install epel-release
+    yum: name=epel-release state=latest
+  - name: Install git
+    yum: name=git state=latest
+  - name: Install patch
+    yum: name=patch state=latest
+  - name: Install wget
+    yum: name=wget state=latest
+  - name: Install python-pip
+    yum: name=python-pip state=latest
+  - name: Download six
+    command: "{{item}}"
+    with_items: 
+    - wget -c https://pypi.python.org/packages/source/s/six/six-1.10.0.tar.gz#md5=34eed507548117b2ab523ab14b2f8b55
+    - tar -xf six-1.10.0.tar.gz 
+    args: 
+      chdir: /root
+  - name: Install six
+    command: python setup.py install
+    args: 
+      chdir: /root/six-1.10.0
+  - name: Checkout devstack
+    git: repo=https://git.openstack.org/openstack-dev/devstack dest=/opt/devstack version=stable/liberty
+  - name: Set persmissions
+    file: path=/opt/devstack recurse=true owner=vagrant
+  - name: Copy /opt/devstack/samples/local.conf to /opt/devstack/local.conf
+    command: cp /opt/devstack/samples/local.conf /opt/devstack/local.conf
+  - name: Patch local.conf
+    patch: src=liberty/local.conf.patch dest=/opt/devstack/local.conf
