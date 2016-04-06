@@ -20,6 +20,7 @@ Vagrant.configure(2) do |config|
   # Create a private network, which allows host-only access to the machine
   config.vm.provider 'virtualbox' do |v, override|
     v.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    v.memory = 4096
   end
 
   config.vm.provision :ansible do |ansible|
