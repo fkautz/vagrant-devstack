@@ -16,24 +16,26 @@ Vagrant.configure(2) do |config|
 
 #  config.vm.network "private_network", ip: "192.168.50.4",
 #    nic_type: "virtio"
-
+  config.vm.network "private_network", ip: "192.168.254.31"
   # Create a private network, which allows host-only access to the machine
   config.vm.provider 'virtualbox' do |v, override|
     v.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    v.memory = 4096
+    #v.memory = 4096
+    v.memory = 8192
   end
 
   config.vm.provision :ansible do |ansible|
     ansible.playbook = "playbook.yml"
   end
 
-#  if Vagrant.has_plugin?("vagrant-cachier")
-#    config.cache.scope = :box
-#    config.cache.synced_folder_opts = {
-#      type: :nfs,
-#      mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
-#    }
-#  end
+  if Vagrant.has_plugin?("vagrant-cachier")
+    config.cache.scope = :box
+    config.cache.synced_folder_opts = {
+      type: :nfs,
+      mount_options: ['rw', 'vers=3', 'tcp', 'nolock']
+    }
+    #config.cache.enable :pip
+  end
 
 
 end

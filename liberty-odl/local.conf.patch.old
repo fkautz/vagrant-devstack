@@ -1,0 +1,37 @@
+19a20,46
+> # Services
+> disable_service swift
+> disable_service cinder
+> disable_service n-net
+> enable_service q-svc
+> enable_service q-dhcp
+> enable_service q-l3
+> enable_service q-meta
+> enable_service q-vpn
+> enable_service q-metering
+> enable_service q-lbaas
+> enable_service q-fwaas
+> enable_service neutron
+> enable_service tempest
+> 
+> #ODL
+> enable_plugin networking-odl https://github.com/openstack/networking-odl
+> 
+> ENABLE_TENANT_TUNNELS=True
+> 
+> HOST_NAME=$(hostname)
+> SERVICE_HOST_NAME=${HOST_NAME}
+> SERVICE_HOST=$HOST_NAME
+> 
+> VNCSERVER_PROXYCLIENT_ADDRESS=$SERVICE_HOST
+> VNCSERVER_LISTEN=0.0.0.0
+> 
+44a72,75
+> # GIT SETTINGS
+> # ``GIT_BASE`` should be set if a different git server should be used
+> GIT_BASE=https://github.com
+> 
+101c132
+< enable_service tempest
+---
+> #enable_service tempest

@@ -4,14 +4,26 @@
   tasks: 
   - name: Install epel-release
     yum: name=epel-release state=latest
-  - name: Install git
-    yum: name=git state=latest
-  - name: Install patch
-    yum: name=patch state=latest
-  - name: Install wget
-    yum: name=wget state=latest
-  - name: Install python-pip
-    yum: name=python-pip state=latest
+  - name: Install rdo repository
+    yum: pkg=https://repos.fedorapeople.org/repos/openstack/openstack-liberty/rdo-release-liberty-2.noarch.rpm
+  - name: Install dependencies
+    yum: pkg={{item}} state=latest
+    with_items:
+    - git
+    - patch
+    - wget
+    - net-tools
+    - bridge-utils
+  - name: Download python pip installer
+    command: wget -c https://bootstrap.pypa.io/get-pip.py
+    args:
+      chdir: /root
+  - name: Run python pip installer
+    command: python get-pip.py
+    args:
+      chdir: /root
+  - name: Install os-testr
+    pip: name=os-testr state=latest
   - name: Download six
     command: "{{item}}"
     with_items: 
@@ -25,9 +37,15 @@
       chdir: /root/six-1.10.0
   - name: Checkout devstack
     git: repo=https://git.openstack.org/openstack-dev/devstack dest=/opt/devstack version=stable/liberty
+  - name: Checkout networking-odl
+    git: repo=https://github.com/openstack/networking-odl dest=/opt/stack/networking-odl version=stable/liberty
   - name: Set persmissions
     file: path=/opt/devstack recurse=true owner=vagrant
-  - name: Copy /opt/devstack/samples/local.conf to /opt/devstack/local.conf
-    command: cp /opt/devstack/samples/local.conf /opt/devstack/local.conf
-  - name: Patch local.conf
-    patch: src=liberty/local.conf.patch dest=/opt/devstack/local.conf
+  - name: Copy local local.conf to remote /opt/devstack/local.conf
+    copy: src=liberty-odl/local.conf dest=/opt/devstack/local.conf
+  - name: Copy bridge config to remote
+    copy: src=liberty-odl/ifcfg-br100 dest=/etc/sysconfig/network-scripts/ifcfg-br100 
+  - name: Copy beryllium manifest
+    copy: src=liberty-odl/beryllium-snapshot-0.4.2 dest=/opt/stack/networking-odl/devstack/odl-releases/beryllium-snapshot-0.4.2
+  - name: Restart networking
+    command: service network restart

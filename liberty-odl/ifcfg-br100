@@ -1,0 +1,7 @@
+DEVICE=br100
+TYPE=Bridge
+ONBOOT=yes
+DELAY=0
+BOOTPROTO=dhcp
+ONBOOT=yes
+STP=no
