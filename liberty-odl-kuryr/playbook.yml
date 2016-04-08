@@ -1,0 +1,6 @@
+- name: Include networking-odl
+  include: ../liberty-odl/playbook.yml
+- name: Checkout kuryr
+  git: repo=https://github.com/openstack/kuryr dest=/opt/stack/kuryr version=241caabc85f2492864957c5e62b3f9caa5de379b
+- name: Copy local local.conf to remote /opt/devstack/local.conf
+  copy: src=liberty-odl-kuryr/local.conf dest=/opt/devstack/local.conf

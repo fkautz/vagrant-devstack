@@ -1,0 +1,19 @@
+- name: Include liberty playbook.yml
+  include: ../liberty/playbook.yml
+- name: Install rdo repository
+  yum: pkg=https://repos.fedorapeople.org/repos/openstack/openstack-liberty/rdo-release-liberty-2.noarch.rpm
+- name: Install dependencies
+  yum: pkg={{item}} state=latest
+  with_items:
+  - net-tools
+  - bridge-utils
+- name: Checkout networking-odl
+  git: repo=https://github.com/openstack/networking-odl dest=/opt/stack/networking-odl version=stable/liberty
+- name: Copy local local.conf to remote /opt/devstack/local.conf
+  copy: src=liberty-odl/local.conf dest=/opt/devstack/local.conf
+- name: Copy bridge config to remote
+  copy: src=liberty-odl/ifcfg-br100 dest=/etc/sysconfig/network-scripts/ifcfg-br100 
+- name: Copy beryllium manifest
+  copy: src=liberty-odl/beryllium-snapshot-0.4.2 dest=/opt/stack/networking-odl/devstack/odl-releases/beryllium-snapshot-0.4.2
+- name: Restart networking
+  command: service network restart
