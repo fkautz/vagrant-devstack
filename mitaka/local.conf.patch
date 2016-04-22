@@ -1,0 +1,5 @@
+44a45,48
+> # GIT SETTINGS
+> # ``GIT_BASE`` should be set if a different git server should be used
+> GIT_BASE=https://github.com
+> 

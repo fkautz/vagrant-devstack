@@ -1,0 +1,6 @@
+- name: Checkout devstack
+  git: repo=https://git.openstack.org/openstack-dev/devstack dest=/opt/devstack version=stable/mitaka
+- name: Set persmissions
+  file: path=/opt/devstack recurse=true owner=vagrant
+- name: Copy local mitaka/local.conf to remote /opt/devstack/local.conf
+  copy: src=mitaka/local.conf dest=/opt/devstack/local.conf
