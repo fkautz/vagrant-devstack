@@ -1,0 +1,17 @@
+---
+- hosts: all
+  sudo: true
+  tasks: 
+  - name: Install epel-release
+    yum: name=epel-release state=latest
+  - name: Install nmap-ncat
+    yum: name=nmap-ncat state=latest
+  - name: Install rdo repository
+    yum: pkg=https://repos.fedorapeople.org/repos/openstack/openstack-liberty/rdo-release-liberty-2.noarch.rpm
+  - name: Install dependencies
+    yum: pkg={{item}} state=latest
+    with_items:
+    - git
+    - patch
+    - wget
+

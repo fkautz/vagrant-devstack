@@ -18,6 +18,10 @@
     command: python get-pip.py
     args:
       chdir: /root
+  - name: Upgrade pip
+    command: pip install --upgrade pip
+    args:
+      chdir: /root
   - name: Install os-testr
     pip: name=os-testr state=latest
   - name: Download six
